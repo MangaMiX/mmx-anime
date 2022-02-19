@@ -2,9 +2,8 @@ import logging
 
 from bs4 import BeautifulSoup
 
+from mangamix.settings import ANIME_URL
 from utils.http_utils import HttpUtils
-
-ANIME_URL_ = 'https://www.nautiljon.com/classements/tendance/anime/'
 
 
 class AnimeExtractor:
@@ -14,7 +13,7 @@ class AnimeExtractor:
 
     async def get_animes(self) -> list[str]:
         result = []
-        status, response = await HttpUtils.send(method='GET', url=ANIME_URL_)
+        status, response = await HttpUtils.send(method='GET', url=ANIME_URL)
         if status != 200:
             self.logger.error(f'Failed to get_animes. Status: {status}, response: {response}')
             return result
@@ -23,5 +22,5 @@ class AnimeExtractor:
         for td in table.find_all('td', attrs={"class": "vtop left"}):
             a = td.find("a", recursive=False)
             result.append(a.get('title'))
-        self.logger.info(f'Found {len(result)} animes for url: {ANIME_URL_}')
+        self.logger.info(f'Found {len(result)} animes for url: {ANIME_URL}')
         return result
