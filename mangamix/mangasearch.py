@@ -9,7 +9,7 @@ from elasticsearch.helpers import async_bulk
 from mangamix.settings import ES_INDEX, ES_HOST, ES_USER, ES_PASSWORD
 
 
-class ElasticsearchInjector:
+class Mangasearch:
 
     def __init__(self):
         self.logger = logging.getLogger(f'{__name__}.{__class__.__name__}')
@@ -33,7 +33,7 @@ class ElasticsearchInjector:
         for anime in animes:
             yield {
                 "_index": ES_INDEX,
-                "_id": ElasticsearchInjector.hash_name(anime),
+                "_id": Mangasearch.hash_name(anime),
                 "_source": {'name': anime},
                 "_op_type": 'create',
             }
