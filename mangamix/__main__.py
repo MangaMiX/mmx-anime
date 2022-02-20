@@ -13,9 +13,15 @@ logger = logging.getLogger(f'{__name__}')
 
 async def run():
     anime_extractor = AnimeExtractor()
-    animes = await anime_extractor.get_animes()
     elasticsearch_injector = ElasticsearchInjector()
-    await elasticsearch_injector.index(animes)
+    found_anime = True
+    while found_anime:
+        await asyncio.sleep(2)
+        status, animes = await anime_extractor.get_next_animes()
+        if status == 200 and len(animes) > 0:
+            await elasticsearch_injector.index(animes)
+        else:
+            found_anime = False
 
 if __name__ == '__main__':
     if platform.system().lower().find('windows') != -1:  # For windows compatibility
