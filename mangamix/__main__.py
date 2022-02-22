@@ -17,8 +17,8 @@ async def run():
     found_anime = True
     while found_anime:
         await asyncio.sleep(2)
-        status, animes = await anime_extractor.get_next_animes()
-        if status == 200 and len(animes) > 0:
+        animes = await anime_extractor.get_next_animes()
+        if len(animes) > 0:
             await mangasearch.index(animes)
         else:
             found_anime = False
