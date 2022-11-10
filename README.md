@@ -1,3 +1,3 @@
 # mmx-anime
 
-This component is used to search anime et create elasticsearch document for each anime.
+This component is used to search anime and create elasticsearch document for each anime.
