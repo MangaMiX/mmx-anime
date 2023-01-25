@@ -12,17 +12,17 @@ class AnimeExtractor:
         self.logger = logging.getLogger(f'{__name__}.{__class__.__name__}')
         self.num = start_index
 
-    async def get_next_animes(self) -> (int, list[str]):
+    async def get_next_animes(self) -> list[str]:
         result = []
-        url = f'{MMX_ANIME_URL}{self.get_anime_index()}/'
-        if self.num < MMX_EXTRACT_LIMIT:
+        url = f'{MMX_ANIME_URL}?limit={self.get_anime_index()}/'
+        if MMX_EXTRACT_LIMIT is None or self.num < MMX_EXTRACT_LIMIT:
             status, response = await HttpUtils.send(method='GET', url=url)
             if status == 200:
                 bs = BeautifulSoup(response, 'html.parser')
-                table = bs.find("table", attrs={"class": "classements"})
-                for td in table.find_all('td', attrs={"class": "vtop left"}):
-                    a = td.find("a", recursive=False)
-                    result.append(a.get('title'))
+                table = bs.find("table", attrs={"class": "top-ranking-table"})
+                for h3 in table.find_all('h3', attrs={"class": "hoverinfo_trigger"}):
+                    a = h3.find("a", recursive=False)
+                    result.append(a.text)
                 self.logger.info(f'Found {len(result)} animes for url: {url}')
             else:
                 self.logger.error(f'Failed to get_animes for url {url}. Status: {status}, response: {response}')
