@@ -21,7 +21,7 @@ class AnimeExtractor:
                 bs = BeautifulSoup(response, 'html.parser')
                 table = bs.find("table", attrs={"class": "top-ranking-table"})
                 for h3 in table.find_all('h3', attrs={"class": "hoverinfo_trigger"}):
-                    if len(result) >= MMX_EXTRACT_LIMIT:
+                    if MMX_EXTRACT_LIMIT and len(result) >= MMX_EXTRACT_LIMIT:
                         break
                     a = h3.find("a", recursive=False)
                     result.append(a.text)
